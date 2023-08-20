@@ -7,16 +7,32 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.os.Environment
+import android.provider.CalendarContract
 import android.provider.MediaStore
+import android.widget.ImageView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.atakan.objectclassification.ui.theme.ObjectClassificationTheme
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.task.core.BaseOptions
@@ -47,6 +63,8 @@ class MainActivity : ComponentActivity() {
             this, modelFileName, options
         )
 
+
+
         setContent {
             ObjectClassificationTheme {
                 // A surface container using the 'background' color from the theme
@@ -54,9 +72,32 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Column(){
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ){
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        ){
+                            if (false){
+                                Image(
+                                    bitmap = imageBitmap.asImageBitmap(),
+                                    contentDescription = "Displayed Picture",
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+                            else{
+                                Box(modifier = Modifier.background(color = androidx.compose.ui.graphics.Color.Black)) {
+                                    Text(text = "Choose Image", modifier = Modifier.fillMaxSize().align(
+                                        Alignment.Center), textAlign = TextAlign.Center)
+                                }
+                            }
+                        }
+
                         Button(onClick = { pickImageFromGallery() }) {
-                            Text("Choose")
+                            Text("Choose Image")
                         }
                         // Inside your onClick block
                         Button(onClick = {
@@ -97,6 +138,7 @@ class MainActivity : ComponentActivity() {
                                     outputStream
                                 )
                                 outputStream.close()
+                                imageBitmap = mutableBitmap
 
                                 println("image saved to: ${outputPath.absolutePath}")
                             } else {
