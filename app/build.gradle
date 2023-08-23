@@ -79,7 +79,11 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
     implementation 'org.tensorflow:tensorflow-lite-task-vision:0.4.0'
+
     // Import the GPU delegate plugin Library for GPU inference
     implementation 'org.tensorflow:tensorflow-lite-gpu-delegate-plugin:0.4.0'
     implementation 'org.tensorflow:tensorflow-lite-gpu:2.9.0'
+
+    //Blur
+    implementation 'io.github.hokofly:hoko-blur:1.5.0'
 }

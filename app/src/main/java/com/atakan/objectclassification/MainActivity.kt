@@ -10,6 +10,7 @@ import android.os.Environment
 import android.provider.CalendarContract
 import android.provider.MediaStore
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -33,6 +34,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.atakan.objectclassification.ImageUtils.applyBlur
 import com.atakan.objectclassification.ui.theme.ObjectClassificationTheme
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.task.core.BaseOptions
@@ -111,20 +113,7 @@ class MainActivity : ComponentActivity() {
                             var mutableBitmap = imageBitmap.copy(imageBitmap.config, true)
 
                             if (personDetections.isNotEmpty()) {
-                                personDetections.forEach(){it
-                                    val personBoundingBox =
-                                        it.boundingBox // Assuming you want to blur the first detected person
-
-
-                                    val canvas = Canvas(mutableBitmap)
-
-                                    val blurPaint = Paint()
-                                    blurPaint.color = Color.argb(128, 0, 0, 0)
-                                    blurPaint.style = Paint.Style.FILL_AND_STROKE
-
-                                    canvas.drawRect(personBoundingBox, blurPaint)
-
-                                }
+                                mutableBitmap = applyBlur(context = this@MainActivity, image = mutableBitmap, persons = personDetections)
                                 // Save the modified image to the Downloads folder
                                 val downloadsDir =
                                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
@@ -140,7 +129,8 @@ class MainActivity : ComponentActivity() {
                                 outputStream.close()
                                 imageBitmap = mutableBitmap
 
-                                println("image saved to: ${outputPath.absolutePath}")
+                                val message = "image saved to: ${outputPath.absolutePath}"
+                                Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
                             } else {
                                 println("No person detected in the image.")
                             }
@@ -155,7 +145,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-    // In your activity/fragment
     private val REQUEST_IMAGE_PICK = 2
 
 
